@@ -1,50 +1,73 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import * as jwtDecode from "jwt-decode"; // latest version fix
-import api from "../api/axios";
+import api from "../api/axios"; // your Axios instance
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(
-    localStorage.getItem("token")
-      ? jwtDecode.default(localStorage.getItem("token"))
-      : null
-  );
+  const [user, setUser] = useState(null); // stores logged-in user info
+  const [loading, setLoading] = useState(true); // prevent flicker on reload
 
-  // Login function
+  // Restore user from localStorage on mount
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) setUser(storedUser);
+    setLoading(false); // done loading
+  }, []);
+
+  // LOGIN
   const login = async (email, password) => {
-    const res = await api.post("/api/auth/login", { email, password });
-    const token = res.data.token;
-    localStorage.setItem("token", token);
+    try {
+      const res = await api.post("/api/Auth/login", { email, password });
 
-    const decoded = jwtDecode.default(token); // decode token
-    setUser(decoded);
+      if (res.data.success) {
+        const loggedInUser = res.data.data; // backend should return user info including role
+        setUser(loggedInUser);
+        localStorage.setItem("user", JSON.stringify(loggedInUser));
 
-    // Redirect based on role
-    if (decoded.role === "Admin") navigate("/admin");
-    else navigate("/dashboard");
+        // Navigate based on role
+        if (loggedInUser.role === "Investor") navigate("/investor");
+        else if (loggedInUser.role === "Admin") navigate("/admin");
+      } else {
+        alert(res.data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Login error");
+    }
   };
 
-  // Register function
-  const register = async (formData) => {
-    await api.post("/api/auth/register", formData);
-    navigate("/login");
+  // REGISTER
+  const register = async (name, email, password, role) => {
+    try {
+      const res = await api.post("/api/Auth/register", { name, email, password, role });
+
+      if (res.data.success) {
+        alert("Registration successful! Please login.");
+        navigate("/login");
+      } else {
+        alert(res.data.message || "Registration failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Registration error");
+    }
   };
 
-  // Logout
+  // LOGOUT
   const logout = () => {
-    localStorage.removeItem("token");
     setUser(null);
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// Custom hook to use AuthContext easily
 export const useAuth = () => useContext(AuthContext);

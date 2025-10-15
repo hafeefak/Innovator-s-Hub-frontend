@@ -15,9 +15,12 @@ export default function Login() {
     e.preventDefault();
     try {
       setLoading(true);
+      setError(""); // Clear previous errors
       await login(formData.email, formData.password);
+      // Navigation is now handled in AuthContext based on role
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid email or password");
+       console.log(err);
+      setError(err.response?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -99,6 +102,7 @@ export default function Login() {
                   name="email"
                   id="email"
                   placeholder="Enter your email"
+                  value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
                   required
@@ -115,6 +119,7 @@ export default function Login() {
                     name="password"
                     id="password"
                     placeholder="Enter your password"
+                    value={formData.password}
                     onChange={handleChange}
                     className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
                     required

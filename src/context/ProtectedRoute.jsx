@@ -1,17 +1,19 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../context/AuthContext";
 
-export default function ProtectedRoute({ children, role }) {
-  const { user } = useAuth();
+export default function ProtectedRoute({ role, children }) {
+  const { user, loading } = useAuth();
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+  // Wait until AuthContext finishes loading
+  if (loading) return <div>Loading...</div>;
 
-  if (role && user.role !== role) {
-    return <Navigate to="/dashboard" />; // redirect if role mismatch
-  }
+  // Redirect if not logged in
+  if (!user) return <Navigate to="/login" />;
 
+  // Redirect if role does not match
+  if (role && user.role !== role) return <Navigate to="/login" />;
+
+  // Render children if authorized
   return children;
 }

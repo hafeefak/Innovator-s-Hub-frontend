@@ -1,44 +1,34 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import ProtectedRoute from "./context/ProtectedRoute";
-
 import Login from "./pages/Login";
+import InvestorDashboard from "./pages/InvestorDashboard";
 import Register from "./pages/Register";
 
-export default function App() {
+import ProtectedRoute from "./context/ProtectedRoute";
+
+function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/"element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* User Dashboard */}
           <Route
-            path="/dashboard"
+            path="/investor"
             element={
-              <ProtectedRoute>
-                <h1 className="text-center mt-10 text-3xl font-bold">
-                  Welcome User 🎉
-                </h1>
+              <ProtectedRoute role="Investor">
+                <InvestorDashboard />
               </ProtectedRoute>
             }
           />
 
-          {/* Admin Dashboard */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute role="Admin">
-                <h1 className="text-center mt-10 text-3xl font-bold text-red-600">
-                  Welcome Admin 👑
-                </h1>
-              </ProtectedRoute>
-            }
-          />
+         
         </Routes>
       </AuthProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
+
+export default App;

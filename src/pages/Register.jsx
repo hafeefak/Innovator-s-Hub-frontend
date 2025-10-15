@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 export default function Register() {
   const { register } = useAuth();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     role: "Entrepreneur",
@@ -20,7 +20,9 @@ export default function Register() {
     e.preventDefault();
     try {
       setLoading(true);
+      setError(""); // Clear previous errors
       await register(formData);
+      // Navigation is now handled in AuthContext based on role
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
@@ -30,6 +32,25 @@ export default function Register() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  // Role descriptions
+  const roleDescriptions = {
+    Entrepreneur: [
+      "Share your innovative ideas with investors",
+      "Get feedback and mentorship",
+      "Access funding opportunities"
+    ],
+    Investor: [
+      "Discover promising startups",
+      "Connect with talented entrepreneurs", 
+      "Portfolio management tools"
+    ],
+    Admin: [
+      "Platform management",
+      "User moderation",
+      "Analytics and insights"
+    ]
   };
 
   return (
@@ -73,9 +94,6 @@ export default function Register() {
                 <span className="text-cyan-100">Access funding opportunities</span>
               </div>
             </div>
-            
-           
-            
           </div>
         </div>
       </div>
@@ -103,9 +121,10 @@ export default function Register() {
                   Full Name
                 </label>
                 <input
-                  name="name"
-                  id="name"
+                  name="username"
+                  id="username"
                   placeholder="Enter your full name"
+                  value={formData.name}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
@@ -121,6 +140,7 @@ export default function Register() {
                   type="email"
                   id="email"
                   placeholder="Enter your email"
+                  value={formData.email}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
@@ -137,6 +157,7 @@ export default function Register() {
                     type={showPassword ? "text" : "password"}
                     id="password"
                     placeholder="Create a strong password"
+                    value={formData.password}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50"
@@ -181,8 +202,8 @@ export default function Register() {
                 </select>
               </div>
 
-          
-              
+              {/* Role Descriptions */}
+             
 
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4">
