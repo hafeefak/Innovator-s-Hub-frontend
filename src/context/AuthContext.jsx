@@ -1,73 +1,78 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios"; // your Axios instance
+import api from "../api/axios";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null); // stores logged-in user info
-  const [loading, setLoading] = useState(true); // prevent flicker on reload
+  const [user, setUser] = useState(null);
+  const [initializing, setInitializing] = useState(true); // ✅ used during startup
 
-  // Restore user from localStorage on mount
+  // ✅ Load user from localStorage at app start
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) setUser(storedUser);
-    setLoading(false); // done loading
+    const storedUser = localStorage.getItem("user");
+    console.log("Stored user in localStorage:", storedUser);
+
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        console.log("✅ AuthContext initialized with user:", parsedUser);
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem("user");
+      }
+    }
+
+    setInitializing(false); // ✅ done loading
   }, []);
 
-  // LOGIN
+  // ✅ Login
   const login = async (email, password) => {
     try {
       const res = await api.post("/api/Auth/login", { email, password });
-
       if (res.data.success) {
-        const loggedInUser = res.data.data; // backend should return user info including role
+        const loggedInUser = res.data.data;
         setUser(loggedInUser);
         localStorage.setItem("user", JSON.stringify(loggedInUser));
-
-        // Navigate based on role
-        if (loggedInUser.role === "Investor") navigate("/investor");
-        else if (loggedInUser.role === "Admin") navigate("/admin");
+        return { success: true, user: loggedInUser };
       } else {
-        alert(res.data.message || "Login failed");
+        return { success: false, message: res.data.message || "Login failed" };
       }
     } catch (error) {
-      console.error(error);
-      alert("Login error");
+      console.error("Login error:", error);
+      return {
+        success: false,
+        message: error.response?.data?.message || "Login failed",
+      };
     }
   };
 
-  // REGISTER
-  const register = async (name, email, password, role) => {
-    try {
-      const res = await api.post("/api/Auth/register", { name, email, password, role });
-
-      if (res.data.success) {
-        alert("Registration successful! Please login.");
-        navigate("/login");
-      } else {
-        alert(res.data.message || "Registration failed");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Registration error");
-    }
-  };
-
-  // LOGOUT
+  // ✅ Logout
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
+  // ✅ Show loading screen while initializing
+  if (initializing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, initializing }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to use AuthContext easily
 export const useAuth = () => useContext(AuthContext);

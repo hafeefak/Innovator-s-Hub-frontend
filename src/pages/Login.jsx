@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authcontext";
 
 export default function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,19 +15,23 @@ export default function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      setError(""); // Clear previous errors
-      await login(formData.email, formData.password);
-      // Navigation is now handled in AuthContext based on role
-    } catch (err) {
-       console.log(err);
-      setError(err.response?.message || "Invalid email or password");
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+
+  const result = await login(formData.email, formData.password);
+
+  if (result.success) {
+    const role = result.user.role?.toLowerCase();
+
+    if (role === "investor")
+
+      navigate("/investor");
+    else if (role === "admin") navigate("/admin");
+    else if (role === "entrepreneur") navigate("/entrepreneur");
+    else navigate("/login"); // fallback
+  } else {
+    setError(result.message);
+  }
+};
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -32,7 +39,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Background Image with Overlay */}
+   
       <div className="hidden lg:flex lg:flex-1 relative bg-gradient-to-br from-blue-900 to-purple-900">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
@@ -42,7 +49,7 @@ export default function Login() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-purple-900/60" />
         
-        {/* Content Overlay */}
+        
         <div className="relative z-10 flex flex-col justify-center px-12 text-white">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
@@ -75,10 +82,10 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white">
         <div className="mx-auto w-full max-w-md">
-          {/* Mobile Logo */}
+       
           <div className="lg:hidden text-center mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Innovators Hub
@@ -173,12 +180,12 @@ export default function Login() {
                   href="/register" 
                   className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200"
                 >
-                  Join Innovators Hub
+                  Join Innovator's Hub
                 </a>
               </p>
             </div>
 
-            {/* Role Info */}
+          
             <div className="mt-8 grid grid-cols-2 gap-4 text-center">
               <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
                 <div className="text-blue-600 font-semibold">Entrepreneur</div>

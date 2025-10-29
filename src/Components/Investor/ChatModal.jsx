@@ -1,7 +1,7 @@
-// src/components/Investor/ChatModal.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import { investorService } from '../../Services/InvestorServices';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/authcontext';
 
 export default function ChatModal({ isOpen, onClose, entrepreneur }) {
   const { user } = useAuth();
@@ -44,7 +44,7 @@ export default function ChatModal({ isOpen, onClose, entrepreneur }) {
         content: newMessage
       });
       setNewMessage('');
-      await loadMessages(); // Reload messages to get the new one
+      await loadMessages(); 
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
@@ -83,7 +83,7 @@ export default function ChatModal({ isOpen, onClose, entrepreneur }) {
             </button>
           </div>
 
-          {/* Messages */}
+      
           <div className="h-96 overflow-y-auto mb-4 space-y-4">
             {messages.map((message) => (
               <div
@@ -109,7 +109,7 @@ export default function ChatModal({ isOpen, onClose, entrepreneur }) {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Message Input */}
+         
           <form onSubmit={sendMessage} className="flex space-x-4">
             <input
               type="text"

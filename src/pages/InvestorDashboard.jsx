@@ -1,13 +1,15 @@
 // src/pages/InvestorDashboard.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/authcontext';
 import IdeaCard from '../components/Investor/IdeaCard';
 import InvestorSidebar from '../components/Investor/InvestorSidebar';
 import ChatModal from '../components/Investor/ChatModal';
 import { investorService } from '../Services/InvestorServices';
 
 export default function InvestorDashboard() {
+ 
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -32,7 +34,7 @@ export default function InvestorDashboard() {
     filterIdeas();
   }, [ideas, activeTab, searchTerm, selectedCategory]);
 
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -149,7 +151,7 @@ export default function InvestorDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="flex">
-        {/* Full Height Sidebar */}
+      
         <InvestorSidebar 
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -162,11 +164,11 @@ export default function InvestorDashboard() {
         />
 
         <div className="flex-1 lg:ml-1 min-h-screen flex flex-col">
-          {/* Top Navigation Bar */}
+          
           <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
             <div className="px-6 py-3">
               <div className="flex items-center justify-between">
-                {/* Search Input */}
+                
                 <div className="flex-1 max-w-lg">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -184,7 +186,7 @@ export default function InvestorDashboard() {
                   </div>
                 </div>
 
-                {/* User Profile & Dropdown */}
+           
                 <div className="ml-4 relative" ref={dropdownRef}>
                   <button
                     className="flex items-center space-x-2 focus:outline-none"
@@ -204,8 +206,8 @@ export default function InvestorDashboard() {
                       <button
                         className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                         onClick={() => {
-                          logout();           // clears user session
-                          navigate("/login"); // redirects to login page
+                          logout();           
+                          navigate("/login"); 
                         }}
                       >
                         Logout
@@ -217,18 +219,17 @@ export default function InvestorDashboard() {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="flex-1 p-8">
-            {/* Page Header */}
+          
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Investment Opportunities</h1>
               <p className="text-gray-600 text-lg">
                 Discover innovative ideas and connect with visionary entrepreneurs
               </p>
 
-              {/* Stats Cards */}
+           
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
-                {/* Total Ideas */}
+              
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center">
                     <div className="p-3 bg-blue-100 rounded-xl">
@@ -243,7 +244,6 @@ export default function InvestorDashboard() {
                   </div>
                 </div>
 
-                {/* Liked */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center">
                     <div className="p-3 bg-green-100 rounded-xl">
@@ -260,7 +260,7 @@ export default function InvestorDashboard() {
                   </div>
                 </div>
 
-                {/* Saved */}
+                
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center">
                     <div className="p-3 bg-purple-100 rounded-xl">
@@ -277,7 +277,7 @@ export default function InvestorDashboard() {
                   </div>
                 </div>
 
-                {/* Categories */}
+                
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center">
                     <div className="p-3 bg-orange-100 rounded-xl">
@@ -294,7 +294,6 @@ export default function InvestorDashboard() {
               </div>
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
                 <div className="flex items-center">
@@ -306,7 +305,7 @@ export default function InvestorDashboard() {
               </div>
             )}
 
-            {/* Content Grid */}
+           
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="text-center">
@@ -362,7 +361,7 @@ export default function InvestorDashboard() {
         </div>
       </div>
 
-      {/* Chat Modal */}
+     
       <ChatModal
         isOpen={chatModalOpen}
         onClose={() => setChatModalOpen(false)}

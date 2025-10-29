@@ -1,4 +1,4 @@
-// src/components/Investor/IdeaCard.js
+
 import React, { useState } from 'react';
 
 export default function IdeaCard({ idea, onLike, onSave, onChat }) {
@@ -28,28 +28,9 @@ export default function IdeaCard({ idea, onLike, onSave, onChat }) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
-      {/* Image */}
-      <div className="h-48 bg-gray-200 relative">
-        {idea.imageUrl && !imageError ? (
-          <img
-            src={idea.imageUrl}
-            alt={idea.title}
-            className="w-full h-full object-cover"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-            <span className="text-white text-4xl">💡</span>
-          </div>
-        )}
-        <div className="absolute top-4 right-4">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(idea.category)}`}>
-            {idea.category}
-          </span>
-        </div>
-      </div>
-
-      {/* Content */}
+  
+      
+     
       <div className="p-6">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 flex-1 mr-2">
@@ -87,10 +68,7 @@ export default function IdeaCard({ idea, onLike, onSave, onChat }) {
           {idea.description}
         </p>
 
-        {/* Stats */}
-        
-
-        {/* Entrepreneur Info */}
+       
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white text-xs font-semibold">

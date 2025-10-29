@@ -1,20 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import Login from "./pages/Login";
-import InvestorDashboard from "./pages/InvestorDashboard";
-import Register from "./pages/Register";
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/authcontext";
 import ProtectedRoute from "./context/ProtectedRoute";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import InvestorDashboard from "./pages/InvestorDashboard";
+import EntrepreneurDashboard from "./pages/EntrepreneurDashboard";
 
-function App() {
+export default function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path="/"element={<Login />} />
+          {/* Default redirect */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
+          {/* Protected routes */}
           <Route
             path="/investor"
             element={
@@ -23,12 +28,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/entrepreneur"
+  element={
+    <ProtectedRoute role="Entrepreneur">
+      <EntrepreneurDashboard />
+    </ProtectedRoute>
+  }
+/>
 
-         
         </Routes>
       </AuthProvider>
     </Router>
   );
 }
-
-export default App;

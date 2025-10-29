@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authcontext";
 
 export default function Register() {
   const { register } = useAuth();
@@ -20,9 +20,9 @@ export default function Register() {
     e.preventDefault();
     try {
       setLoading(true);
-      setError(""); // Clear previous errors
+      setError(""); 
       await register(formData);
-      // Navigation is now handled in AuthContext based on role
+      
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
@@ -34,7 +34,7 @@ export default function Register() {
     setShowPassword(!showPassword);
   };
 
-  // Role descriptions
+ 
   const roleDescriptions = {
     Entrepreneur: [
       "Share your innovative ideas with investors",
@@ -55,7 +55,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Background Image with Overlay */}
+     
       <div className="hidden lg:flex lg:flex-1 relative bg-gradient-to-br from-blue-900 to-purple-900">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
@@ -65,7 +65,7 @@ export default function Register() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-purple-900/60" />
         
-        {/* Content Overlay */}
+   
         <div className="relative z-10 flex flex-col justify-center px-12 text-white">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
@@ -98,10 +98,10 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Right Side - Registration Form */}
+     
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white">
         <div className="mx-auto w-full max-w-md">
-          {/* Mobile Logo */}
+       
           <div className="lg:hidden text-center mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Innovators Hub
@@ -202,7 +202,7 @@ export default function Register() {
                 </select>
               </div>
 
-              {/* Role Descriptions */}
+             
              
 
               {error && (
@@ -239,7 +239,7 @@ export default function Register() {
               </p>
             </div>
 
-            {/* Terms */}
+           
             <div className="mt-6 text-center">
               <p className="text-xs text-gray-500">
                 By creating an account, you agree to our{" "}

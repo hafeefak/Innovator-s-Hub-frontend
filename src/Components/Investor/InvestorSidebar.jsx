@@ -1,6 +1,6 @@
-// src/components/Investor/InvestorSidebar.jsx
+
 import React from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/authcontext';
 
 export default function InvestorSidebar({
   activeTab,
@@ -9,7 +9,7 @@ export default function InvestorSidebar({
   selectedCategory,
   setSelectedCategory
 }) {
-  const { user } = useAuth(); // get user from AuthContext
+  const { user } = useAuth(); 
 
   const tabs = [
     { id: 'all', name: 'All Ideas', icon: '💡' },
@@ -20,14 +20,14 @@ export default function InvestorSidebar({
   return (
     <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-gray-200 transform lg:translate-x-0 lg:static lg:inset-0">
       <div className="flex flex-col h-full">
-        {/* Logo */}
+    
         <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200">
           <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Innovator's Hub
           </h1>
         </div>
 
-        {/* Navigation */}
+      
         <nav className="flex-1 px-4 py-6 space-y-2">
           
           {tabs.map(tab => (
@@ -45,7 +45,7 @@ export default function InvestorSidebar({
             </button>
           ))}
 
-          {/* Categories Filter */}
+          
           <div className="pt-6">
             <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Categories
@@ -78,7 +78,7 @@ export default function InvestorSidebar({
           </div>
         </nav>
 
-        {/* User Info */}
+       
         
       </div>
     </div>
